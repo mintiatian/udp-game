@@ -9,11 +9,10 @@ namespace Network
         {
             CreateReceive();
         }
+        private int myPort = 2002;
+        private int sendPort = 2001;
 
         private UdpClient udpClient = null;
-        int myPort = 2001;
-
-        int sendPort = 2002;
 
         private void CreateReceive()
         {
@@ -66,7 +65,7 @@ namespace Network
         }
 
 
-        private void Send(byte[] sendBytes)
+        public void Send(byte[] sendBytes)
         {
 
             //UdpClientを作成する
