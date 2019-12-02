@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Network
@@ -54,17 +55,17 @@ namespace Network
                 return;
             }
 
-            //データを文字列に変換する
-            string rcvMsg = System.Text.Encoding.UTF8.GetString(rcvBytes);
+            RecieveData(remoteEP.Address, remoteEP.Port, rcvBytes);
 
-            //受信したデータと送信者の情報をRichTextBoxに表示する
-            string displayMsg = string.Format("[{0} ({1})] > {2}",
-                remoteEP.Address, remoteEP.Port, rcvMsg);
-            //RichTextBox1.BeginInvoke(new Action<string>(ShowReceivedString), displayMsg);
-            Console.WriteLine(displayMsg);
 
             //再びデータ受信を開始する
             udp.BeginReceive(ReceiveCallback, udp);
+        }
+
+
+        protected virtual void RecieveData(IPAddress address, int port, byte[] rcvBytes)
+        {
+
         }
 
 
@@ -81,6 +82,19 @@ namespace Network
 
             //非同期的にデータを送信する
             udpClient.BeginSend(sendBytes, sendBytes.Length, "localhost", sendPort, SendCallback, udpClient);
+        }
+
+        public void Send(ClientStatus sentClient, byte[] sendBytes)
+        {
+
+            //UdpClientを作成する
+            if (udpClient == null)
+            {
+                udpClient = new System.Net.Sockets.UdpClient();
+            }
+
+            //非同期的にデータを送信する
+            udpClient.BeginSend(sendBytes, sendBytes.Length, sentClient.address.ToString(), sentClient.port, SendCallback, udpClient);
         }
 
 
